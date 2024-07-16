@@ -1,4 +1,4 @@
-The `safe-nonce` extension can be used to improve the security of the application/web-site and help avoid XSS issues by allowing you to return known trusted inline scripts with full [nonce](https://developer.mozilla.org/docs/Web/HTML/Global_attributes/nonce) support while blocking all other inline scripts via an appropriate [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP). It improves the base security provided with the htmx.config.inlineScriptNonce feature by forcing you to provide a unique HX-Nonce response header along with the same random nonce on all trusted inline scripts to reduce the risk of untrusted script tags being allowed to run. By default htmx is designed to trust all inline scripts provided by your server when using inlineScriptNonce feature and changes it to not trust them by default.
+The `safe-nonce` htmx extension can be used to improve the security of the application/web-site and help avoid XSS issues by allowing you to return known trusted inline scripts with full [nonce](https://developer.mozilla.org/docs/Web/HTML/Global_attributes/nonce) support while blocking all other inline scripts via an appropriate [Content Security Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP). It improves the base security provided with the htmx.config.inlineScriptNonce feature by forcing you to provide a unique HX-Nonce response header along with the same random nonce on all trusted inline scripts to reduce the risk of untrusted script tags being allowed to run. By default htmx is designed to trust all inline scripts provided by your server when using inlineScriptNonce feature and changes it to not trust them by default.
 
 This feature is not a replacement for a good secure backend server implementation where all potential user input strings are sanitized by auto-escaping or a templating engine. This is just another layer of protection you can choose to add on top if needed. 
 
@@ -23,8 +23,10 @@ Using this extension with the `selfRequestsOnly` default config disabled to allo
 
 ## Install
 
+Download safe-nonce.js and publish it with your web application and link to it with an appropriate script tag.
+
 ```html
-<script src="https://unpkg.com/htmx-ext-safe-nonce@2.0.0/safe-nonce.js"></script>
+<script src="safe-nonce.js"></script>
 ```
 
 ## Usage
@@ -36,7 +38,7 @@ HX-Nonce: "{random-nonce}"
 Content-Security-Policy: "default-src 'self' 'nonce-{random-nonce}'; style-src 'self' 'nonce-{random-nonce}'"
 <head>
     <meta name="htmx-config" content='{"safeInlineScriptNonce":"{random-nonce}","inlineStyleNonce":"{random-nonce}"}'>
-    <script src="https://unpkg.com/htmx-ext-safe-nonce@2.0.0/safe-nonce.js"></script>
+    <script src="safe-nonce.js"></script>
     <script nonce="{random-nonce}">console.log('safe')</script>
 </head>
 <body hx-ext="safe-nonce">
