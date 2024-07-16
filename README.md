@@ -1,6 +1,6 @@
 # My htmx extensions
 
-This is a repository of my extensions like safe-nonce
+This is a repository of my extensions like [safe-nonce](https://github.com/MichaelWest22/htmx-extensions/blob/main/src/safe-nonce/README.md)
 
 ## htmx Extensions
 
