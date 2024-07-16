@@ -1,4 +1,8 @@
-# htmx Extensions
+# My htmx extensions
+
+This is a repository of my extensions like safe-nonce
+
+## htmx Extensions
 
 [htmx](https://htmx.org) provides an extension mechanism for defining and using extensions within htmx-based applications.
 A list of extensions can be found at <https://extensions.htmx.org>.  If you wish to contribute an extension to that
