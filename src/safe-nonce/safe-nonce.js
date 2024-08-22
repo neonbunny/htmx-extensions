@@ -21,7 +21,7 @@ htmx.defineExtension('safe-nonce', {
     if (nonce) { // if nonce is valid then change regex to remove all scripts without this nonce
       replaceRegex = new RegExp(`<script(\\s(?!nonce="${nonce.replace(/[\\\[\]\/^*.+?$(){}'#:!=|]/g, '\\$&')}")[^>]*>|>).*?<\\/script(\\s[^>]*>|>)`, 'gis')
     }
-    return text.replace(replaceRegex, '') // remove script tags
+    return text.replace(replaceRegex, '').replace(/ignore:safe-nonce/g, '') // remove script tags and strip ignore extension
   },
   onEvent: function(name, evt) {
     if (name === 'htmx:load') {
@@ -29,6 +29,9 @@ htmx.defineExtension('safe-nonce', {
         if (script.nonce !== htmx.config.inlineScriptNonce) {
           script.remove() // remove all scripts with invalid nonce from page loaded content so it can't get saved in history where inlineScriptNonce can enable bad scripts
         }
+      })
+      Array.from(evt.detail.elt.querySelectorAll('[hx-ext*="ignore:safe-nonce"], [data-hx-ext*="ignore:safe-nonce"]')).forEach((elt) => {
+        elt.remove() // remove content that tries to disable safe-nonce extension
       })
     }
   }

@@ -17,7 +17,13 @@ This feature is not a replacement for a good secure backend server implementatio
 
 If you only need to support inline scripts in head and not in the body that gets replaced by htmx then you do not need this extension and can implement just steps 3-6 above but instead set `allowScriptTags` config to false at step 5 and this will protect your page. If you can move all your scripts into external js files, then you do not need to support inline scripts and can set `allowScriptTags` false and set a strong CSP that does not use nonce instead. Also consider disabling `allowEval` config value as well to improve your websites security.
 
-When partial AJAX requests are swapped into part of the page the nonce will be gathered from the CSP response header or a the custom `HX-Nonce` header and it will remove all script tags that don't match this nonce and can therefore not be trusted. Htmx then updates the correctly nonced inline scripts that make it though so their nonce matches the initial page load nonce which will then allow the scripts to execute. There is built in nonce reuse protection so the initial page load nonce if it is discovered cannot be reused to inject scripts. Also only nonce headers from the same hostname are trusted to avoid cross site issues. Script tags with invalid nonces that make it in via full page loads are also stripped after they load (and are blocked by CSP) so they do not enter htmx's history where they could get promoted to working scripts.
+## Protection Details
+
+- When partial AJAX requests are swapped into part of the page the nonce will be gathered from the CSP response header or a the custom `HX-Nonce` header and it will remove all script tags that don't match this nonce and can therefore not be trusted. Htmx then updates the correctly nonced inline scripts that make it though so their nonce matches the initial page load nonce which will then allow the scripts to execute. 
+- There is built in nonce reuse protection so the initial page load nonce if it is discovered cannot be reused to inject scripts.
+- Nonce headers from the same hostname only are trusted to avoid cross site issues.
+- Script tags with invalid nonces that make it in via full page loads are also stripped after they load (and are blocked by CSP) so they do not enter htmx's history where they could get promoted to working scripts.
+- Attempts to disable the extension with hx-ext="ignore:safe-nonce" are blocked.
 
 ## Configuration Reference
 
