@@ -17,7 +17,7 @@ This feature is not a replacement for a good secure backend server implementatio
 
 If you only need to support inline scripts in head and not in the body that gets replaced by htmx then you do not need this extension and can implement just steps 3-6 above but instead set `allowScriptTags` config to false at step 5 and this will protect your page. If you can move all your scripts into external js files, then you do not need to support inline scripts and can set `allowScriptTags` false and set a strong CSP that does not use nonce instead. Also consider disabling `allowEval` config value as well to improve your websites security.
 
-When partial AJAX requests are swapped into part of the page the nonce will be gathered from the CSP response header or a the custom `HX-Nonce` header and it will remove all script tags that don't match this nonce and can therefore not be trusted. Htmx then updates the correctly nonced inline scripts that make it though so their nonce matches the initial page load nonce which will then allow the scripts to execute. There is built in nonce reuse protection so the initial page load nonce if it is discovered cannot be reused to inject scripts. Also only nonce headers from the same hostname are trusted to avoid cross site issues.
+When partial AJAX requests are swapped into part of the page the nonce will be gathered from the CSP response header or a the custom `HX-Nonce` header and it will remove all script tags that don't match this nonce and can therefore not be trusted. Htmx then updates the correctly nonced inline scripts that make it though so their nonce matches the initial page load nonce which will then allow the scripts to execute. There is built in nonce reuse protection so the initial page load nonce if it is discovered cannot be reused to inject scripts. Also only nonce headers from the same hostname are trusted to avoid cross site issues. Script tags with invalid nonces that make it in via full page loads are also stripped after they load (and are blocked by CSP) so they do not enter htmx's history where they could get promoted to working scripts.
 
 ## Configuration Reference
 
@@ -31,7 +31,6 @@ When partial AJAX requests are swapped into part of the page the nonce will be g
 | `htmx.config.refreshOnHistoryMiss`    | normally defaults to `false`, but set `true` by safe-nonce so that htmx will issue a full page refresh on history misses rather than use an AJAX request which will not update script nonces correctly                   |
 | `htmx.config.allowScriptTags`         | defaults to `true`, determines if htmx will process script tags found in new content and should be disabled if you don't need this feature. If you disable this you probably do not need the `safe-nonce` extension      |
 | `htmx.config.allowEval`               | defaults to `true`, can be used to disable htmx's use of eval for certain features (e.g. trigger filters). Should be disabled if you don't use these features so you can remove unsafe-eval from CSP and protect you page|
-| `htmx.config.historyEnabled`          | defaults to `true`, can be set to `false` to disable the history feature. The hisotry feature can can cause unsafe scripts to be reprocessed as trusted in some edge cases so disable if you can                         |
 
 </div>
 
@@ -48,7 +47,7 @@ A sample initial page load response:
 ```html
 Response-Header Content-Security-Policy: "default-src 'self' 'nonce-{random-nonce}'; style-src 'self' 'nonce-{random-nonce}'"
 <head>
-    <meta name="htmx-config" content='{"safeInlineScriptNonce":"{random-nonce}","inlineStyleNonce":"{random-nonce}","allowEval":false,"historyEnabled":false}'>
+    <meta name="htmx-config" content='{"safeInlineScriptNonce":"{random-nonce}","inlineStyleNonce":"{random-nonce}","allowEval":false}'>
     <script src="safe-nonce.js"></script>
     <script nonce="{random-nonce}">console.log('safe')</script>
 </head>
